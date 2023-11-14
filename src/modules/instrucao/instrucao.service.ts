@@ -9,36 +9,38 @@ import { InstrucaoHistoryRepository } from '../instrucao-histories/repositories/
 
 @Injectable()
 export class InstrucaoService {
-    constructor(private instrucaoRepository: InstrucaoRepository, private instrucaoHistoryRepository: InstrucaoHistoryRepository){}
+  constructor(
+    private instrucaoRepository: InstrucaoRepository,
+    private instrucaoHistoryRepository: InstrucaoHistoryRepository,
+  ) {}
 
-    async create(createInstrucaoDTO: CreateInstrucaoDTO ) {
-        const instrucao = await this.instrucaoRepository.create(createInstrucaoDTO)
-        return instrucao
-    }
+  async create(createInstrucaoDTO: CreateInstrucaoDTO) {
+    const instrucao = await this.instrucaoRepository.create(createInstrucaoDTO);
+    return instrucao;
+  }
 
-    async findAll(group: string | undefined) {
-        return this.instrucaoRepository.findAll(group)
-    }
+  async findAll(group: string | undefined) {
+    return this.instrucaoRepository.findAll(group);
+  }
 
-    async findOne(id: string){
-        const findInstrucao = await this.instrucaoRepository.findOne(id)
-        return findInstrucao
-    }
+  async findOne(id: string) {
+    const findInstrucao = await this.instrucaoRepository.findOne(id);
+    return findInstrucao;
+  }
 
-    async update(id: string, data: UpdateInstrucaoDto){
+  async update(id: string, data: UpdateInstrucaoDto) {
+    // let instrucaoToHistory: any = await this.instrucaoRepository.findOne(id)
 
-        let instrucaoToHistory: any = await this.instrucaoRepository.findOne(id)
+    const agora = new Date();
+    const dia = agora.getDate().toString().padStart(2, '0');
+    const mes = (agora.getMonth() + 1).toString().padStart(2, '0');
+    const ano = agora.getFullYear();
+    const horas = agora.getHours().toString().padStart(2, '0');
+    const minutos = agora.getMinutes().toString().padStart(2, '0');
 
-        const agora = new Date();
-        const dia = agora.getDate().toString().padStart(2, '0'); 
-        const mes = (agora.getMonth() + 1).toString().padStart(2, '0'); 
-        const ano = agora.getFullYear();
-        const horas = agora.getHours().toString().padStart(2, '0'); 
-        const minutos = agora.getMinutes().toString().padStart(2, '0');
-    
-        const dataFormatada = `${dia}-${mes}-${ano} ${horas}:${minutos}`;
+    const dataFormatada = `${dia}-${mes}-${ano} ${horas}:${minutos}`;
 
-        instrucaoToHistory.createdAt = dataFormatada
+    /*      instrucaoToHistory.createdAt = dataFormatada
         instrucaoToHistory.lastEditted = dataFormatada
         instrucaoToHistory.id = randomUUID();
         instrucaoToHistory.os= instrucaoToHistory.os.id
@@ -47,19 +49,19 @@ export class InstrucaoService {
         delete instrucaoToHistory.client_id
         delete instrucaoToHistory.osId
         delete instrucaoToHistory.itemOs_id
-        delete instrucaoToHistory.os
+        delete instrucaoToHistory.os */
 
-        instrucaoToHistory.instrucao_id = id
+    //instrucaoToHistory.instrucao_id = id
 
-        const updatedInstrucao = await this.instrucaoRepository.update(id, data)
+    const updatedInstrucao = await this.instrucaoRepository.update(id, data);
 
-        await this.instrucaoHistoryRepository.create(instrucaoToHistory)
+    //await this.instrucaoHistoryRepository.create(instrucaoToHistory)
 
-        return updatedInstrucao
-    }
+    return updatedInstrucao;
+  }
 
-    async delete(id: string){
-        const updatedInstrucao = await this.instrucaoRepository.delete(id)
-        return updatedInstrucao
-    }
+  async delete(id: string) {
+    const updatedInstrucao = await this.instrucaoRepository.delete(id);
+    return updatedInstrucao;
+  }
 }

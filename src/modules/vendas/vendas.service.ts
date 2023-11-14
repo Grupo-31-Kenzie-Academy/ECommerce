@@ -9,36 +9,38 @@ import { randomUUID } from 'crypto';
 
 @Injectable()
 export class VendaService {
-    constructor(private vendaRepository: VendaRepository, private vendaHistoryRepository: VendaHistoryRepository){}
+  constructor(
+    private vendaRepository: VendaRepository,
+    private vendaHistoryRepository: VendaHistoryRepository,
+  ) {}
 
-    async create(createVendaDTO: CreateVendaDTO ) {
-        const venda = await this.vendaRepository.create(createVendaDTO)
-        return venda
-    }
+  async create(createVendaDTO: CreateVendaDTO) {
+    const venda = await this.vendaRepository.create(createVendaDTO);
+    return venda;
+  }
 
-    async findAll(group: string | undefined) {
-        return this.vendaRepository.findAll(group)
-    }
+  async findAll(group: string | undefined) {
+    return this.vendaRepository.findAll(group);
+  }
 
-    async findOne(id: string){
-        const findVenda = await this.vendaRepository.findOne(id)
-        return findVenda
-    }
+  async findOne(id: string) {
+    const findVenda = await this.vendaRepository.findOne(id);
+    return findVenda;
+  }
 
-    async update(id: string, data: UpdateVendaDto){
+  async update(id: string, data: UpdateVendaDto) {
+    //let vendaToHistory: any = await this.vendaRepository.findOne(id)
 
-        let vendaToHistory: any = await this.vendaRepository.findOne(id)
+    const agora = new Date();
+    const dia = agora.getDate().toString().padStart(2, '0');
+    const mes = (agora.getMonth() + 1).toString().padStart(2, '0');
+    const ano = agora.getFullYear();
+    const horas = agora.getHours().toString().padStart(2, '0');
+    const minutos = agora.getMinutes().toString().padStart(2, '0');
 
-        const agora = new Date();
-        const dia = agora.getDate().toString().padStart(2, '0'); 
-        const mes = (agora.getMonth() + 1).toString().padStart(2, '0'); 
-        const ano = agora.getFullYear();
-        const horas = agora.getHours().toString().padStart(2, '0'); 
-        const minutos = agora.getMinutes().toString().padStart(2, '0');
-    
-        const dataFormatada = `${dia}-${mes}-${ano} ${horas}:${minutos}`;
+    const dataFormatada = `${dia}-${mes}-${ano} ${horas}:${minutos}`;
 
-        vendaToHistory.createdAt = dataFormatada
+    /*  vendaToHistory.createdAt = dataFormatada
         vendaToHistory.lastEditted = dataFormatada
         vendaToHistory.id = randomUUID();
         vendaToHistory.os= vendaToHistory.os.id
@@ -46,17 +48,17 @@ export class VendaService {
         delete vendaToHistory.versions
         delete vendaToHistory.client_id
 
-        vendaToHistory.venda_id = id
+        vendaToHistory.venda_id = id */
 
-        const updatedVenda = await this.vendaRepository.update(id, data)
+    const updatedVenda = await this.vendaRepository.update(id, data);
 
-        await this.vendaHistoryRepository.create(vendaToHistory)
+    //await this.vendaHistoryRepository.create(vendaToHistory)
 
-        return updatedVenda
-    }
+    return updatedVenda;
+  }
 
-    async delete(id: string){
-        const updatedVenda = await this.vendaRepository.delete(id)
-        return updatedVenda
-    }
+  async delete(id: string) {
+    const updatedVenda = await this.vendaRepository.delete(id);
+    return updatedVenda;
+  }
 }

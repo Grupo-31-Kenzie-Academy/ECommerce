@@ -1,10 +1,15 @@
 /* eslint-disable prettier/prettier */
-import { IsString, IsNotEmpty, IsEmail, IsArray, MinLength } from "class-validator";
-import { hashSync } from "bcryptjs";
-import { Transform } from "class-transformer";
+import {
+  IsString,
+  IsNotEmpty,
+  IsEmail,
+  IsArray,
+  MinLength,
+} from 'class-validator';
+import { hashSync } from 'bcryptjs';
+import { Transform } from 'class-transformer';
 
 export class CreateUserDto {
-
   @IsString()
   @IsNotEmpty()
   createdAt: string;
@@ -19,7 +24,10 @@ export class CreateUserDto {
 
   @IsString()
   @IsNotEmpty()
-  cpf_cnpj: string;
+  cpf: string;
+
+  @IsString()
+  cnpj: string;
 
   @IsString()
   @IsNotEmpty()
@@ -71,7 +79,7 @@ export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
   @MinLength(8)
-  @Transform(({value}: {value: string}) => hashSync(value, 10), {
+  @Transform(({ value }: { value: string }) => hashSync(value, 10), {
     groups: ['transform'],
   })
   senha: string;
@@ -87,6 +95,4 @@ export class CreateUserDto {
 
   @IsArray()
   fornecedores: string[];
-
-
 }
